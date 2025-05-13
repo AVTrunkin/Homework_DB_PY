@@ -73,27 +73,27 @@ def delete_phone(conn, client_id, phone):
         cur.execute("""
         DELETE FROM phone_numbers 
         WHERE client_id=%s;
-        """, (2,))
+        """, (client_id,))
         cur.execute("""
         SELECT * FROM phone_numbers;
         """)
         # print(cur.fetchall())
-    return cur.fetchall()
+    return cur.fetchall()[0]
 
 def delete_client(conn, client_id):
     with conn.cursor() as cur:
         cur.execute("""
         DELETE FROM phone_numbers 
         WHERE client_id=%s;
-        """, (1,))
+        """, (client_id,))
         cur.execute("""
         DELETE FROM clients WHERE id=%s;
-        """, (1,))
+        """, (id,))
         cur.execute("""
         SELECT * FROM clients;
         """)
         # print(cur.fetchall())
-    return cur.fetchall()
+    return cur.fetchall()[0]
 
 def find_client(conn, first_name=None, last_name=None, email=None, phone=None):
     with conn.cursor() as cur:
@@ -101,36 +101,36 @@ def find_client(conn, first_name=None, last_name=None, email=None, phone=None):
         SELECT first_name, last_name, email, phones 
         FROM clients, phone_numbers 
         WHERE first_name=%s;
-        """, ('Петр',))
+        """, (first_name,))
             # print(cur.fetchone())
         cur.execute("""
         SELECT first_name, last_name, email, phones 
         FROM clients, phone_numbers 
         WHERE last_name=%s;
-        """, ('Семенов',))
+        """, (last_name,))
             # print(cur.fetchone())
         cur.execute("""
         SELECT first_name, last_name, email, phones 
         FROM clients, phone_numbers 
         WHERE email=%s;
-        """, ('qwerty3@mail.ru',))
+        """, (email,))
             # print(cur.fetchone())
         cur.execute("""
         SELECT first_name, last_name, email, phones 
         FROM clients, phone_numbers 
         WHERE phones=%s;
-        """, ('1234567890',))
-    return cur.fetchone()
+        """, (phones,))
+    return cur.fetchone()[0]
 
 
 if __name__ == '__main__':
     with psycopg2.connect(database="netology_db", user="postgres", password="Qwedsa66!") as conn:
-        print (add_client(conn,'иван', 'Иванов', 'qwerty2@mail.ru'))
-        print (add_phone(conn, '1', '1234567890'))
-        print (change_client (conn, '1', 'Jon', 'Varon', 'samual@mail.com'))
-        print (delete_phone (conn, '1', '89109467816'))
+        print (add_client(conn,'Иван', 'Иванов', 'qwerty@mail.ru'))
+        print (add_phone(conn, '1', '1234567890', 'home'))
+        print (change_client (conn, '2', 'Семен', 'Семенов', 'qwerty2@mail.ru'))
+        print (delete_phone (conn, '2', '3456789012'))
         print (delete_client(conn, '1'))
-        print (find_client(conn, 'Иванов'))
+        print (find_client(conn, 'Петр'))
 
 
 
